@@ -14,13 +14,14 @@ window.onload = function() {
   var boundHeight = 2848;
   var x = 0, y = 0;
   var frameCounter = 0;
-  var gameSpeed = 7;
+  var gameSpeed = 0.5;
   var score = 0;
+  var deltaTime = 0;
   movingCameraRight = false;
   movingCameraLeft = false;
   movingCameraDown = false;
   movingCameraUp = false;
-  speedLimit = 2;
+  speedLimit = 0.03125;
 
   // basic phaser preload/create/update functions
 
@@ -48,29 +49,30 @@ window.onload = function() {
 
   function update() {
     updateCamera();
-      gameText.text = score;
-      frameCounter++;
-      updateDirection();
-      if (frameCounter >= gameSpeed &&
-          movingCameraRight === false &&
-          movingCameraLeft === false &&
-          movingCameraDown === false &&
-          movingCameraUp === false) {
-          movePlayer();
-          if (playerCollidesWithSelf()) {
-              gameOver();
-          }
-          if (coinCollidesWithSnake()) {
-              score++;
-              coin.destroy();
-              placeRandomCoin();
-              gameSpeed--;
-              if (gameSpeed <= speedLimit) gameSpeed = speedLimit;
-          } else if (playerDirection != undefined) {
-              removeTail();
-          }
-          frameCounter = 0;
-      }
+    gameText.text = score;
+    updateDirection();
+    deltaTime = deltaTime + game.time.physicsElapsed;
+    console.log(deltaTime);
+    if (deltaTime >= gameSpeed &&
+        movingCameraRight === false &&
+        movingCameraLeft === false &&
+        movingCameraDown === false &&
+        movingCameraUp === false) {
+        movePlayer();
+        if (playerCollidesWithSelf()) {
+            gameOver();
+        }
+        if (coinCollidesWithSnake()) {
+            score++;
+            coin.destroy();
+            placeRandomCoin();
+            gameSpeed = (gameSpeed / 1.5);
+            if (gameSpeed <= speedLimit) gameSpeed = speedLimit;
+        } else if (playerDirection != undefined) {
+            removeTail();
+        }
+        deltaTime = 0;
+    }
   }
 
   // helper functions
