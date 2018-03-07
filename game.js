@@ -1,3 +1,13 @@
+/*
+  Steps to build demo:
+  1) Initalize Phaser object
+  2) Intialize the snake object
+  3) Implement keyboard input
+  4) Implement snake expanding functionality
+  5) Implement coin object
+  6) Implement snake collisions (walls, self, and coin)
+  7) Implement 
+*/
 window.onload = function() {
   // variables that will hold objects
   var head, tail, cursors, snake, coin, gameText, playerDirection, movementDirection, movingCameraLeft, movingCameraRight, movingCameraUp, movingCameraDown, speedLimit;
@@ -68,7 +78,9 @@ window.onload = function() {
             score++;
             coin.destroy();
             placeRandomCoin();
-            gameSpeed = (gameSpeed / 1.5);
+            if(gameSpeed > 0.034) {
+              gameSpeed = (gameSpeed / 1.5);
+            }
             if (gameSpeed <= speedLimit) gameSpeed = speedLimit;
         } else if (playerDirection !== undefined) {
             removeTail();
