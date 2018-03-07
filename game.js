@@ -10,25 +10,27 @@ window.onload = function() {
   var playerYSize = 40;
   var canvasWidth = playerXSize * columns;
   var canvasHeight = playerYSize * rows;
-  var boundWidth = 4288;
-  var boundHeight = 2848;
+  //var boundWidth = canvasWidth; //4288;
+  //var boundHeight = canvasHeight; //2848;
   var x = 0, y = 0;
   var frameCounter = 0;
   var gameSpeed = 0.5;
   var score = 0;
   var deltaTime = 0;
+  /*
   movingCameraRight = false;
   movingCameraLeft = false;
   movingCameraDown = false;
   movingCameraUp = false;
   speedLimit = 0.03125;
+  */
 
   // basic phaser preload/create/update functions
 
   var game = new Phaser.Game(canvasWidth, canvasHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
   function preload() {
-      game.world.setBounds(0, 0, boundWidth, boundHeight);
+      //game.world.setBounds(0, 0, boundWidth, boundHeight);
       game.load.image('castle', 'Assets/Images/castle.jpg');
       game.load.image('snake', 'Assets/Images/snake_segment.png');
       game.load.image('coin', 'Assets/Images/coin_segment.png');
@@ -48,16 +50,16 @@ window.onload = function() {
   }
 
   function update() {
-    updateCamera();
+  //  updateCamera();
     gameText.text = score;
     updateDirection();
     deltaTime = deltaTime + game.time.physicsElapsed;
     console.log(deltaTime);
-    if (deltaTime >= gameSpeed &&
-        movingCameraRight === false &&
+    if (deltaTime >= gameSpeed //&&
+      /*  movingCameraRight === false &&
         movingCameraLeft === false &&
         movingCameraDown === false &&
-        movingCameraUp === false) {
+        movingCameraUp === false */) {
         movePlayer();
         if (playerCollidesWithSelf()) {
             gameOver();
@@ -68,7 +70,7 @@ window.onload = function() {
             placeRandomCoin();
             gameSpeed = (gameSpeed / 1.5);
             if (gameSpeed <= speedLimit) gameSpeed = speedLimit;
-        } else if (playerDirection != undefined) {
+        } else if (playerDirection !== undefined) {
             removeTail();
         }
         deltaTime = 0;
@@ -78,7 +80,7 @@ window.onload = function() {
   // helper functions
 
   function initSnake() {
-      head = new Object();
+      head = {};
       newHead(0, 0);
       tail = head;
       newHead(playerXSize, 0);
@@ -96,7 +98,7 @@ window.onload = function() {
   }
 
   function placeRandomCoin() {
-      if (coin != undefined) coin.destroy();
+      if (coin !== undefined) coin.destroy();
       coin = game.add.image(0, 0, 'coin');
       do {
           coin.position.x = Math.floor(Math.random() * 13) * 40;
@@ -107,7 +109,7 @@ window.onload = function() {
   // linked list functions
 
   function newHead(x, y) {
-      var newHead = new Object();
+      var newHead = {};
       newHead.image = game.add.image(x, y, 'snake');
       newHead.next = null;
       head.next = newHead;
@@ -182,11 +184,11 @@ window.onload = function() {
           y += playerYSize;
           movementDirection = directions.down;
       }
-      if (x <= 0 - playerXSize|| x >= boundWidth || y <= 0 - playerYSize || y >= boundHeight) {
+      if (x <= 0 - playerXSize|| x >= canvasWidth /*boundWidth*/ || y <= 0 - playerYSize || y >= canvasHeight /*boundHeight*/) {
           gameOver();
       }
 
-      if (playerDirection != undefined) {
+      if (playerDirection !== undefined) {
           newHead(x, y);
       }
   }
@@ -196,10 +198,11 @@ window.onload = function() {
       deleteSnake();
       initSnake();
       score = 0;
-      gameSpeed = 10;
+      gameSpeed = 0.5;
       playerDirection = undefined;
       gameText.text = "";
   }
+  /*
 
   function updateCamera() {
     if (x - game.camera.x >= canvasWidth) {
@@ -252,4 +255,5 @@ window.onload = function() {
     gameText.x = game.camera.x + canvasWidth;
     gameText.y = game.camera.y;
   }
+  */
 }
