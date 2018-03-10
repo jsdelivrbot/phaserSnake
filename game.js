@@ -12,7 +12,7 @@ window.onload = function() {
   // variables that will hold objects
   var head, tail, cursors, snake, coin, gameText, playerDirection, movementDirection, movingCameraLeft, movingCameraRight, movingCameraUp, movingCameraDown, speedLimit;
   var directions = Object.freeze({up: 0, down: 1, right: 2, left: 3});
-
+  var pad1;
   // configuration variables and starting values
   var rows = 20;
   var columns = 20;
@@ -38,12 +38,14 @@ window.onload = function() {
   // basic phaser preload/create/update functions
 
   var game = new Phaser.Game(canvasWidth, canvasHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-
   function preload() {
-      //game.world.setBounds(0, 0, boundWidth, boundHeight);
-      game.load.image('castle', 'Assets/Images/castle.jpg');
-      game.load.image('snake', 'Assets/Images/snake_segment.png');
-      game.load.image('coin', 'Assets/Images/coin_segment.png');
+    //game.world.setBounds(0, 0, boundWidth, boundHeight);
+    game.load.image('castle', 'Assets/Images/castle.jpg');
+    game.load.image('snake', 'Assets/Images/snake_segment.png');
+    game.load.image('coin', 'Assets/Images/coin_segment.png');
+    game.input.gamepad.start();
+    pad1 = game.input.gamepad.pad1;
+    console.log("pad1 rawpad starts with: " + pad1._rawPad)
   }
 
   function create() {
@@ -57,10 +59,12 @@ window.onload = function() {
       placeRandomCoin();
 
       cursors = game.input.keyboard.createCursorKeys();
+    console.log("pad1 rawpad is now: " + pad1._rawPad)
   }
 
   function update() {
   //  updateCamera();
+    console.log("pad1 rawpad in update is: " + pad1._rawPad)
     gameText.text = score;
     updateDirection();
     deltaTime = deltaTime + game.time.physicsElapsed;
@@ -168,16 +172,17 @@ window.onload = function() {
   // movement functions
 
   function updateDirection() {
-      if (cursors.right.isDown && movementDirection != directions.left) {
-          playerDirection = directions.right;
+      if ((cursors.right.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT)) && movementDirection != directions.left) {
+        console.log("pad1 rawpad is now: " + pad1._rawPad)  
+        playerDirection = directions.right;
       }
-      if (cursors.left.isDown && movementDirection != directions.right) {
+      if ((cursors.left.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT)) && movementDirection != directions.right) {
           playerDirection = directions.left;
       }
-      if (cursors.up.isDown && movementDirection != directions.down) {
+      if ((cursors.up.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_UP)) && movementDirection != directions.down) {
           playerDirection = directions.up;
       }
-      if (cursors.down.isDown && movementDirection != directions.up) {
+      if ((cursors.down.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN)) && movementDirection != directions.up) {
           playerDirection = directions.down;
       }
   }
@@ -206,13 +211,15 @@ window.onload = function() {
   }
 
   function gameOver() {
-      alert("The game is over! Your score was: " + score);
-      deleteSnake();
-      initSnake();
-      score = 0;
-      gameSpeed = 0.5;
-      playerDirection = undefined;
-      gameText.text = "";
+    console.log("pad1 rawpad in start of gameover is: " + pad1._rawPad) 
+    alert("The game is over! Your score was: " + score);
+    deleteSnake();
+    initSnake();
+    score = 0;
+    gameSpeed = 0.5;
+    playerDirection = undefined;
+    gameText.text = "";
+    console.log("pad1 rawpad at end of gameover is: " + pad1._rawPad)
   }
   /*
 
